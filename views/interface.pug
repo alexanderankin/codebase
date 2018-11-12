@@ -1,0 +1,48 @@
+extends layout
+
+block body
+
+  <nav id="topnav" class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand" href="/">
+      <div style="width: 40px;">
+        <img src="/cb-idea-2-notsquare.png" style="width: 100%;">
+      </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/int">Link</a>
+        </li>
+
+        script.
+          $(function() { $('#topnav a.nav-link').each(function() {
+            if (window.location.pathname === this.pathname )
+              $(this.parentElement).toggleClass('active')
+          }); });
+
+      </ul>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          | Welcome, #{name}!
+        </button>
+        script.
+          $(function() {if ($(window).width() < 768) $('.dropdown-menu').toggleClass('dropdown-menu-right');});
+        <div class="dropdown-menu dropdown-menu-right">
+          <button class="dropdown-item" type="button">Settings</button>
+          <button class="dropdown-item" type="button">Manage/Add Content</button>
+          <button class="dropdown-item" type="button">Logout</button>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  block content
