@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 router.use(function (req, res, next) {
-  console.log(req.session);
-  req.session.times = req.session.times ? req.session.times + 1 : 1;
-  next();
-})
+  if (req.session.uid) {
+    return next();
+  }
+  req.session.destination = req.path;
+  res.redirect('/login');
+});
 
 /* GET /contests */
 router.get('/', function(req, res, next) {

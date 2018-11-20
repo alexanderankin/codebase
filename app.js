@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -19,6 +20,7 @@ app.set('trust proxy', 1);
 app.locals.title = 'Contest Base';
 
 app.use(session({
+  store: new FileStore(),
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true

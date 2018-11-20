@@ -6,22 +6,23 @@ block content
       Please Login
 
     .row
-      <form>
-        <div class="form-group row">
-          <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
-          <div class="col-sm-10">
-            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      .col-md-8
+        <form method="post">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-4 form-control-label">Email</label>
+            <div class="col-sm-8">
+              <input type="email" name="email" class="form-control" id="inputEmail3" placeholder="Email" autocomplete="off" tabindex="1">
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="inputPassword3" class="col-sm-2 form-control-label">Password</label>
-          <div class="col-sm-10">
-            <input type="password" class="form-control" id="inputPassword3" placeholder="Email">
+          <div class="form-group row">
+            <label for="inputPassword3" class="col-sm-4 form-control-label">Password</label>
+            <div class="col-sm-8">
+              <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="" autocomplete="off" tabindex="2">
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-secondary">Sign in</button>
+          <div class="form-group row">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-secondary" tabindex="3">Sign in</button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
