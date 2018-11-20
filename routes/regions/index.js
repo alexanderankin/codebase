@@ -9,7 +9,7 @@ router.use(function (req, res, next) {
   res.redirect('/login');
 });
 
-/* GET /contests */
+/* GET /regions */
 router.get('/', function(req, res, next) {
   res.render('interface', { name: req.session.uid });
 });

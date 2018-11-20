@@ -23,6 +23,7 @@ function wipe(done) {
     })
     .createTable('region', function(t) {
       t.increments('id');
+      t.string('name');
       t.integer('map_id').references('id').inTable('map');
       t.string('notes', 1000);
     })

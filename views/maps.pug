@@ -1,0 +1,53 @@
+extends interface
+
+block content
+  h3 Maps
+
+  p Browse and add maps to your contest base. Refresh to see new maps.
+  <button id="show-upload" type="button" class="btn btn-dark mb-3">Upload</button>
+  script.
+    $(function() {
+      $('#show-upload').on('click', function showUpload(e) {
+        $('#show-upload').toggleClass('mb-3');
+        $('#my-awesome-dropzone').toggleClass('collapse');
+      });
+    });
+  <form action="/maps/upload" class="dropzone m-3 collapse" id="my-awesome-dropzone">
+    div.dz-message
+      <button type="button" class="btn btn-warning mt-2 mb-2 mr-2">Upload Map</button> (GeoJson FeatureCollection)
+  </form>
+  style.
+    #my-awesome-dropzone {
+      min-height: unset !important;
+      padding: 10px;
+      border-radius: 5px;
+      border-style: dashed;
+      background: #efefef;
+    }
+    #my-awesome-dropzone .dz-message {
+      margin: 1em 0;
+    }
+
+  if (maps && maps.length)
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          each val, key in maps[0]
+            <th>#{key}</th>
+        </tr>
+      </thead>
+      <tbody>
+        each map in maps
+          <tr>
+            each val, key in map
+              <td>
+                <a href="/maps/#{map.id}">
+                  | #{val}
+                </a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+  else
+    p No maps yet.

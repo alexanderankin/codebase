@@ -49,7 +49,9 @@ router.get('/logout', function(req, res, next) {
   res.redirect('/');
 });
 
-/* GET home page. */
+/* GET entity pages. */
 router.use('/contests', require('./contests'));
+router.use('/maps', require('./maps'));
+router.use('/regions', require('./regions'));
 
 module.exports = router;
