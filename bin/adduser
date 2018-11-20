@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+/**
+ * Script to enroll a new user
+ */
+var l = process.argv.length;
+if (l === 2 || l === 3 || l > 4) {
+  console.log('Usage: ./bin/adduser <newuser> <newpassword>');
+  process.exit(1);
+}
+
+var knex = require('../db').getKnex();
+var hash = require('../db/util').hash;
+knex('organizer').insert({
+  username: process.argv[2],
+  password: hash(process.argv[3]),
+}).asCallback(function (err, result) {
+  if (err) throw err;
+
+  console.log("Done enrolling", process.argv[2], "with id", result[0]);
+  knex.destroy(function () {
+    process.exit(0);
+  });
+});
