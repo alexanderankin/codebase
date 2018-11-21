@@ -1,0 +1,59 @@
+extends interface
+
+block content
+  h3
+    a(href='/offices') Offices
+
+  p.
+    Enter office information:
+
+  p.
+    Offices are one (1) of the regions in one (1) of the maps. 'Code' is a way
+    to shorthand the actual unique identifier provided by the map file, to
+    make it memorable or readable for organizing.
+
+  script.
+    $(function() {
+      $("#select-map").select2({});
+      $("#select-region").select2();
+      $("#select-map").on('change', function(e) {
+        $.get('/offices/getFeatures/' + $("#select-map").val()).then(function(regions) {
+          $("#select-region").html('');
+          $("#select-region").select2({ data: regions });
+        })
+      });
+      $("#select-map").trigger('change');
+    });
+
+  <form method="post">
+    <div class="form-group row">
+      <label for="select-map" class="col-sm-2 form-control-label">Map</label>
+      <div class="col-sm-10">
+        if (maps && maps.length)
+          <select id="select-map" name="map" class="c-select">
+            each map_ in maps
+              <option value="#{map_.id}">#{map_.name}</option>
+          </select>
+        else
+          p No maps yet!
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="select-region" class="col-sm-2 form-control-label">Region</label>
+      <div class="col-sm-10">
+        <select id="select-region" name="region" class="c-select">
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="input-code" class="col-sm-2 form-control-label">Code</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="input-code" name="code" placeholder="CD-01">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-secondary">Save</button>
+      </div>
+    </div>
+  </form>

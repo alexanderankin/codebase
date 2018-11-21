@@ -13,28 +13,35 @@ function wipe(done) {
       t.string('phone');
     })
 
+    .dropTableIfExists('office')
     .dropTableIfExists('map')
-    .dropTableIfExists('region')
     .createTable('map', function(t) {
       t.increments('id');
       t.string('name');
       t.string('geojson', 500);
       t.string('feature_key');
+      t.string('level');  // federal, state, county, city, school, MDJ
       t.string('notes', 1000);
     })
-    .createTable('region', function(t) {
+
+    .createTable('office', function (t) {
       t.increments('id');
-      t.string('name');
-      t.integer('map_id').references('id').inTable('map');
+      t.integer('map_id').unsigned().references('id').inTable('map');
+      t.string('key');  // feature.properties[map.feature_key]
+      t.string('code');  // slug
       t.string('notes', 1000);
     })
 
     .asCallback(function (err, result) {
-      knexRe.destroy(done);
+      knexRe.destroy(function () {
+        if (err) { return done(err); }
+        done();
+      });
     });
 }
 
-wipe(function () {
+  wipe(function (err) {
+  if (err) { throw err; }
   console.log("Database", process.env['mysqldb'], 'reset.');
 });
 

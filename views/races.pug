@@ -1,0 +1,39 @@
+extends interface
+
+block content
+  h3
+    a(href='/races') Races
+
+  p Browse and add races to your contest base.
+
+  p.
+    Races are the "contests" - the individual events of candidates running
+    against each other for office. Whereas an office is associated with an
+    incumbent, races have an office, a year, and candidates.
+
+  a(href="/races/new")
+    <button type="button" class="btn btn-dark m-2">Add New</button>
+
+  if (races && races.length)
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          each val, key in races[0]
+            <th>#{key}</th>
+        </tr>
+      </thead>
+      <tbody>
+        each race in races
+          <tr>
+            each val, key in race
+              <td>
+                <a href="/races/#{race.id}">
+                  | #{val}
+                </a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+  else
+    p No races yet.

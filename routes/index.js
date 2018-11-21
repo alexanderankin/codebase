@@ -52,6 +52,7 @@ router.get('/logout', function(req, res, next) {
 /* GET entity pages. */
 router.use('/contests', require('./contests'));
 router.use('/maps', require('./maps'));
-router.use('/regions', require('./regions'));
+router.use('/offices', require('./offices'));
+router.use('/races', require('./races'));
 
 module.exports = router;

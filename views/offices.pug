@@ -1,0 +1,40 @@
+extends interface
+
+block content
+  h3
+    a(href='/offices') Offices
+
+  p Browse and add Offices to your contest base.
+
+  p.
+    Offices are one (1) of the regions in one (1) of the maps. 'Code' is a way
+    to shorthand the actual unique identifier provided by the map file, to
+    make it memorable or readable for organizing.
+
+  a(href='/offices/new')
+    <button type="button" class="btn btn-dark m-2">Add New</button>
+
+  if (offices && offices.length)
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          each val, key in offices[0]
+            <th>#{key}</th>
+        </tr>
+      </thead>
+      <tbody>
+        each office in offices
+          <tr>
+            each val, key in office
+              <td>
+                <a href="/offices/#{office.id}">
+                  | #{val}
+                </a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+  else
+    p No offices yet.
+    

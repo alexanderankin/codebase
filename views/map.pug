@@ -3,6 +3,13 @@ extends interface
 block content
   h3= map_title
 
+  script.
+    $(function() {
+      $("#select-level").select2({
+        tags: true
+      });
+    });
+
   <form method="post">
     <div class="form-group row">
       <label for="input-name" class="col-sm-2 form-control-label">Name</label>
@@ -20,7 +27,15 @@ block content
         </select>
       </div>
     </div>
-
+    <div class="form-group row">
+      <label for="select-level" class="col-sm-2 form-control-label">Level</label>
+      <div class="col-sm-10">
+        <select id="select-level" name="level" class="c-select">
+          each level in levels
+            <option value="#{level}">#{level}</option>
+        </select>
+      </div>
+    </div>
     <div class="form-group row">
       <div class="col-sm-offset-2 col-sm-10">
         <button type="submit" class="btn btn-secondary">Save</button>
@@ -43,4 +58,6 @@ block content
       $('#input-feature-key').select2();
       $('#input-feature-key').val('#{map_key}');
       $('#input-feature-key').trigger('change');
+      $('#select-level').val('#{map_level}');
+      $('#select-level').trigger('change');
     });
