@@ -1,0 +1,34 @@
+extends interface
+
+block content
+  a(href='/candidates')
+    h3 Candidates
+
+  p Browse and add Candidates to your contest base.
+
+  a(href="/candidates/new")
+    <button type="button" class="btn btn-dark m-2">Add New</button>
+
+  if (candidates && candidates.length)
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          each val, key in candidates[0]
+            <th>#{key}</th>
+        </tr>
+      </thead>
+      <tbody>
+        each candidate in candidates
+          <tr>
+            each val, key in candidate
+              <td>
+                <a href="/candidates/#{candidate.id}">
+                  | #{val}
+                </a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+  else
+    p No candidates yet.

@@ -53,6 +53,7 @@ router.get('/logout', function(req, res, next) {
 router.use('/contests', require('./contests'));
 router.use('/maps', require('./maps'));
 router.use('/offices', require('./offices'));
+router.use('/candidates', require('./candidates'));
 router.use('/races', require('./races'));
 
 module.exports = router;

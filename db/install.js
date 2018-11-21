@@ -13,6 +13,8 @@ function wipe(done) {
       t.string('phone');
     })
 
+    .dropTableIfExists('race_candidate')
+    .dropTableIfExists('race')
     .dropTableIfExists('office')
     .dropTableIfExists('map')
     .createTable('map', function(t) {
@@ -30,6 +32,27 @@ function wipe(done) {
       t.string('key');  // feature.properties[map.feature_key]
       t.string('code');  // slug
       t.string('notes', 1000);
+    })
+
+    .dropTableIfExists('candidate')
+    .createTable('candidate', function (t) {
+      t.increments();
+      t.string('name');
+      t.integer('age');
+      t.string('phone');
+      t.string('email');
+    })
+
+    .createTable('race', function (t) {
+      t.increments('id');
+      t.date('time');
+      t.integer('office_id').unsigned().references('id').inTable('office');
+      t.string('notes', 1000);
+    })
+
+    .createTable('race_candidate', function (t) {
+      t.integer('race_id').unsigned().references('id').inTable('race');
+      t.integer('candidate_id').unsigned().references('id').inTable('candidate');
     })
 
     .asCallback(function (err, result) {
