@@ -4,4 +4,69 @@ block content
   a(href="/offices")
     h3 Offices
 
-  pre= JSON.stringify(office, null, 2)
+  h4 #{map_name} #{office_key}
+
+  script.
+    $(function() {
+      $("#select-map").select2({});
+      $("#select-map").val('#{map_id}');
+      $("#select-map").trigger('change');
+
+      // load features
+      $.get('/offices/getFeatures/' + $("#select-map").val()).then(function(regions) {
+        $("#select-region").select2({ data: regions });
+        $("#select-region").val('#{office_key}');
+        $("#select-region").trigger('change');
+      });
+
+      // load features on map change
+      $("#select-map").on('change', function(e) {
+        $.get('/offices/getFeatures/' + $("#select-map").val()).then(function(regions) {
+          $("#select-region").html('');
+          $("#select-region").select2({ data: regions });
+        });
+      });
+    });
+
+  <form method="post">
+    <div class="form-group row">
+      <label for="select-map" class="col-sm-2 form-control-label">Map</label>
+      <div class="col-sm-10">
+        if (maps && maps.length)
+          <select id="select-map" name="map" class="c-select">
+            each map_ in maps
+              <option value="#{map_.id}">#{map_.name}</option>
+          </select>
+        else
+          p No maps yet!
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="select-region" class="col-sm-2 form-control-label">Region</label>
+      <div class="col-sm-10">
+        <select id="select-region" name="region" class="c-select">
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="input-code" class="col-sm-2 form-control-label">Code</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="input-code" name="code" placeholder="CD-01" value='#{office_code}'>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-secondary">Save</button>
+      </div>
+    </div>
+  </form>
+
+  <button id="delete" type="button" class="btn btn-danger">Delete</button>
+  script.
+    $(function() {
+      $('#delete').on('click', function() {
+        var confirmed = confirm("Delete " + window.location.pathname + "?");
+        if (confirmed)
+          window.location.href = window.location.pathname + '/delete';
+      });
+    });

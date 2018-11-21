@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
       id: 'o.id',
       code: 'o.code',
       type: 'm.name',
-      number: 'o.key',
+      district: 'o.key',
       level: 'm.level',
     })
     .asCallback(function (err, offices) {
@@ -100,18 +100,58 @@ router.post('/new', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
   var knex = db.getKnex();
-  knex('office')
-    .select('*')
-    .where({ id: req.params.id })
+
+  knex({ o: 'office' })
+    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .select({
+      map_name: 'm.name',
+      office_key: 'o.key',
+      map_id: 'm.id',
+      office_code: 'o.code',
+    })
+    .where({ 'o.id': req.params.id })
     .asCallback(function (err, rows) {
       if (err) { return next(err); }
       if (!rows || !rows[0]) return next(new Error('Bad Office id'));
 
-      res.render('office', {
-        office: rows[0],
-        name: req.session.uid
+      var result = rows[0];
+      knex('map').select('id', 'name').asCallback(function (err, maps) {
+        if (err) { return next(err); }
+
+        res.render('office', {
+          scripts: [
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
+          ],
+          stylesheets: [
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css'
+          ],
+          name: req.session.uid,
+          maps,
+          ...result
+        });
       });
     });
+});
+
+router.post('/:id', function (req, res, next) {
+  var knex = db.getKnex();
+  knex('office').update({
+    map_id: req.body.map,
+    key: req.body.region,
+    code: req.body.code
+  }).where({ id: req.params.id }).asCallback(function (err) {
+    if (err) { return next(err); }
+    res.redirect(req.originalUrl);
+  });
+});
+
+router.get('/:id/delete', function (req, res, next) {
+  var knex = db.getKnex();
+  knex('office').del().where({ id: req.params.id }).asCallback(function (e) {
+    if (e) return next(e);
+
+    res.redirect('/offices');
+  });
 });
 
 module.exports = router;
