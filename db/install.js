@@ -17,6 +17,7 @@ function wipe(done) {
     .dropTableIfExists('region')
     .createTable('map', function(t) {
       t.increments('id');
+      t.string('name');
       t.string('geojson', 500);
       t.string('feature_key');
       t.string('notes', 1000);

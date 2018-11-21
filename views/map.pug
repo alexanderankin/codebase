@@ -1,0 +1,46 @@
+extends interface
+
+block content
+  h3= map_title
+
+  <form method="post">
+    <div class="form-group row">
+      <label for="input-name" class="col-sm-2 form-control-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="input-name" name="name" value="#{map_name}" placeholder="New Map">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="input-feature-key" class="col-sm-2 form-control-label">Feature key</label>
+      <div class="col-sm-10">
+        <select class="c-select" name="feature_key" id="input-feature-key">
+          <option selected>Select a key</option>
+          each value, key in properties
+            <option value="#{key}">#{key}: #{value}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-secondary">Save</button>
+      </div>
+    </div>
+  </form>
+
+  <button id="delete" type="button" class="btn btn-danger">Delete</button>
+  script.
+    $(function() {
+      $('#delete').on('click', function() {
+        var confirmed = confirm("Delete " + window.location.pathname + "?");
+        if (confirmed)
+          window.location.href = window.location.pathname + '/delete';
+      });
+    });
+
+  script.
+    $(function() {
+      $('#input-feature-key').select2();
+      $('#input-feature-key').val('#{map_key}');
+      $('#input-feature-key').trigger('change');
+    });

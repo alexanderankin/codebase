@@ -1,9 +1,16 @@
 extends interface
 
 block content
-  h3 Maps
+  h3
+    a(href='/maps') Maps
 
   p Browse and add maps to your contest base. Refresh to see new maps.
+
+  p.
+    Maps are files containing shapes (lists of co-ordinates) representing the
+    outlines of where regions corresponding to an elected official lie. They
+    are GeoJSON "FeatureCollection" files (converted from "shapefiles").
+
   <button id="show-upload" type="button" class="btn btn-dark mb-3">Upload</button>
   script.
     $(function() {

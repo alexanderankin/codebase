@@ -22,7 +22,7 @@ block body
 
         script.
           $(function() { $('#topnav a.nav-link').each(function() {
-            if (window.location.pathname === this.pathname )
+            if (window.location.pathname.replace(/\/$/, "") === this.pathname)
               $(this.parentElement).toggleClass('active')
           }); });
 

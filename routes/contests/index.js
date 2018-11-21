@@ -5,7 +5,7 @@ router.use(function (req, res, next) {
   if (req.session.uid) {
     return next();
   }
-  req.session.destination = req.path;
+  req.session.destination = req.originalUrl;
   res.redirect('/login');
 });
 
