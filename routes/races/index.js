@@ -17,7 +17,7 @@ router.use(function (req, res, next) {
 router.get('/', function(req, res, next) {
   var knex = db.getKnex();
   knex({ r: 'race' })
-    .join({ o: 'office' }, 'o.id', 'r.office_id')
+    .leftOuterJoin({ o: 'office' }, 'o.id', 'r.office_id')
     .select({
       id: 'r.id',
       time: 'r.time',

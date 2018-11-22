@@ -50,7 +50,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 /* GET entity pages. */
-router.use('/contests', require('./contests'));
+router.use('/contests', (r, s, n) => s.redirect('/races'));
 router.use('/maps', require('./maps'));
 router.use('/offices', require('./offices'));
 router.use('/candidates', require('./candidates'));
