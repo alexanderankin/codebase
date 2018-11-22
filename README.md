@@ -1,4 +1,4 @@
-# Codebase
+# Contest Base
 
 > A database for electoral contests
 
