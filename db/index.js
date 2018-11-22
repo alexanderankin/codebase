@@ -13,3 +13,5 @@ module.exports = new knexRe({
     database: process.env['mysqldb']
   }
 });
+
+// module.exports.getKnex().on('query', q => console.log(q.sql));

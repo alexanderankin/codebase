@@ -7,22 +7,35 @@ block content
   p.
     Enter race information:
 
+  p You can add candidates on the edit screen.
+
+  script.
+    $(function() { $("#select-office").select2({}); });
+
+  //- pre= JSON.stringify(offices, null, 2)
+
   <form method="post">
     <div class="form-group row">
-      <label for="inputEmail3" class="col-sm-2 form-control-label">Time</label>
+      <label for="input-time" class="col-sm-2 form-control-label">Time</label>
       <div class="col-sm-10">
-        <input type="date" class="form-control" id="inputEmail3" placeholder="Email">
+        <input type="date" class="form-control" id="input-time" name="time">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputPassword3" class="col-sm-2 form-control-label">Office</label>
+      <label class="col-sm-2 form-control-label">Office</label>
       <div class="col-sm-10">
-        <input type="password" class="form-control" id="inputPassword3" placeholder="Email">
+        if (offices && offices.length)
+          <select id="select-office" name="office" class="c-select">
+            each office in offices
+              <option value="#{office.id}">#{office.text}</option>
+          </select>
+        else
+          p No offices yet!
       </div>
     </div>
     <div class="form-group row">
       <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-secondary">Sign in</button>
+        <button type="submit" class="btn btn-secondary">Save</button>
       </div>
     </div>
   </form>
