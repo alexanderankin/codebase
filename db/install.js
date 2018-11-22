@@ -28,7 +28,7 @@ function wipe(done) {
 
     .createTable('office', function (t) {
       t.increments('id');
-      t.integer('map_id').unsigned().references('id').inTable('map');
+      t.integer('map_id').unsigned().references('id').inTable('map').onDelete('cascade');
       t.string('key');  // feature.properties[map.feature_key]
       t.string('code');  // slug
       t.string('notes', 1000);
@@ -46,13 +46,14 @@ function wipe(done) {
     .createTable('race', function (t) {
       t.increments('id');
       t.date('time');
-      t.integer('office_id').unsigned().references('id').inTable('office');
+      t.integer('office_id').unsigned().references('id').inTable('office').onDelete('cascade');
       t.string('notes', 1000);
     })
 
     .createTable('race_candidate', function (t) {
-      t.integer('race_id').unsigned().references('id').inTable('race');
-      t.integer('candidate_id').unsigned().references('id').inTable('candidate');
+      t.integer('race_id').unsigned().references('id').inTable('race').onDelete('cascade').notNullable();
+      t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('cascade').notNullable();
+      t.unique([ 'race_id', 'candidate_id' ]);
     })
 
     .asCallback(function (err, result) {
