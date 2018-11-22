@@ -16,7 +16,7 @@ router.use(function (req, res, next) {
 router.get('/', function(req, res, next) {
   var knex = db.getKnex();
   knex({ o: 'office' })
-    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .leftOuterJoin({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       id: 'o.id',
       code: 'o.code',
@@ -102,7 +102,7 @@ router.get('/:id', function (req, res, next) {
   var knex = db.getKnex();
 
   knex({ o: 'office' })
-    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .leftOuterJoin({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       map_name: 'm.name',
       office_key: 'o.key',
