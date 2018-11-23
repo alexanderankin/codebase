@@ -94,7 +94,7 @@ router.post('/new', function (req, res, next) {
   }).asCallback(function (err) {
     if (err) { return next(err); }
 
-    res.redirect(req.originalUrl);
+    res.redirect('/offices');
   });
 });
 
