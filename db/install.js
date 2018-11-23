@@ -55,6 +55,7 @@ function wipe(done) {
       t.integer('time').unsigned().references('id').inTable('election_time').notNullable();
       t.integer('office_id').unsigned().references('id').inTable('office').onDelete('set null');
       t.string('notes', 1000);
+      t.unique([ 'year', 'time', 'office_id' ]);
     })
 
     .createTable('race_candidate', function (t) {
@@ -79,7 +80,7 @@ function wipe(done) {
     });
 }
 
-  wipe(function (err) {
+wipe(function (err) {
   if (err) { throw err; }
   console.log("Database", process.env['mysqldb'], 'reset.');
 });

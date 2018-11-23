@@ -17,24 +17,31 @@ router.use(function (req, res, next) {
 router.get('/', function(req, res, next) {
   var knex = db.getKnex();
   knex({ r: 'race' })
+    .leftOuterJoin({ et: 'election_time' }, 'et.id', 'r.time')
     .leftOuterJoin({ o: 'office' }, 'o.id', 'r.office_id')
     .select({
       id: 'r.id',
-      time: 'r.time',
+      year: 'r.year',
+      etname: 'et.name',
+      etcode: 'et.code',
       // office_id: 'o.id',
       office: 'o.code'
+    }).then(function (races) {
+      return races.map(function (race) {
+        var office = race.office;
+        delete race.office;
+
+        race.time = [ race.etname, ' (', race.etcode, ')' ].join('');
+        delete race.etname;
+        delete race.etcode;
+
+        race.office = office;
+
+        return race;
+      });
     })
     .asCallback(function (err, races) {
       if (err) { return next(err); }
-
-      races = races.map(function (race) {
-        race.time = [
-
-          moment(race.time).format('MMMM Do YYYY'),
-          ' (', moment(race.time).fromNow(), ')'
-        ].join('');
-        return race;
-      });
 
       res.render('races', {
         name: req.session.uid,
@@ -81,7 +88,7 @@ function getNewRouteInfo(done) {
   var knex = db.getKnex();
   var info = {};
   var offices = knex({ o: 'office' })
-    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .leftOuterJoin({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       id: 'o.id',
       code: 'o.code',
@@ -125,7 +132,8 @@ router.get('/new', function (req, res, next) {
 router.post('/new', function (req, res, next) {
   var knex = db.getKnex();
   knex('race').insert({
-    time: req.body.time ? req.body.time : null,
+    time: req.body.election_time ? req.body.election_time : null,
+    year: req.body.year ? req.body.year : null,
     office_id: req.body.office ? req.body.office : null
   }).asCallback(function (err) {
     if (err) { return next(err); }
@@ -147,8 +155,8 @@ router.get('/:id/add/:candidate_id', function (req, res, next) {
 router.get('/:id', function (req, res, next) {
   var knex = db.getKnex();
   var race = knex({ r: 'race' })
-    .join({ o: 'office' }, 'o.id', 'r.office_id')
-    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .leftOuterJoin({ o: 'office' }, 'o.id', 'r.office_id')
+    .leftOuterJoin({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       id: 'r.id',
       time: 'r.time',
@@ -159,16 +167,32 @@ router.get('/:id', function (req, res, next) {
       type: 'm.name',
       district: 'o.key'
     })
-    .where({ 'r.id': req.params.id });
+    .where({ 'r.id': req.params.id })
+    .then(function (races) {
+      if (!races || !races[0]) { throw new Error('Bad Race id param.'); }
+      return races[0];
+    })
+    .then(function (race) {
+      race.office = formatOfficeDropDown(race, null, null, 'office_id');
+      return race;
+    });
 
   var offices = knex({ o: 'office' })
-    .join({ m: 'map' }, 'm.id', 'o.map_id')
+    .leftOuterJoin({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       id: 'o.id',
       code: 'o.code',
       type: 'm.name',
       district: 'o.key'
+    }).then(function (offices) {
+      return offices.map(formatOfficeDropDown);
+    })
+
+  var ets = knex('election_time').select('*').then(function (ets) {
+    return ets.map(function (et) {
+      return { id: et.id, text: [ et.name + ' (' + et.code + ')' ].join('') };
     });
+  });
 
   var candidates = knex('candidate').select('*');
   var rcs = knex({ r: 'race' })
@@ -177,24 +201,8 @@ router.get('/:id', function (req, res, next) {
     .select('c.*')
     .where({ 'r.id': req.params.id });
 
-  Promise.all([ race, offices, candidates, rcs ]).then(function (values) {
-    // unpack
-    var [ races, offices, candidates, rcs ] = values;
-
-    // 404
-    if (!races || !races[0]) { return next(new Error('Bad Race id param.')); }
-    var race = races[0];
-
-    // format variables
-    race.office = formatOfficeDropDown(race, null, null, 'office_id');
-
-    // https://stackoverflow.com/a/15301874
-    if (race.time) {
-      moment(race.time).format('YYYY-MM-DD');
-    }
-
-    offices = offices.map(formatOfficeDropDown);
-
+  Promise.all([ race, offices, candidates, rcs, ets ]).then(function (values) {
+    var [ race, offices, cands, rcs, ets ] = values;
     res.render('race', {
       scripts: [
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
@@ -206,17 +214,19 @@ router.get('/:id', function (req, res, next) {
       race,
       offices,
       office_id: race.office.id,
-      candidates,
-      race_candidates: rcs
+      election_time_id: race.time,
+      candidates: cands,
+      race_candidates: rcs,
+      election_times: ets
     });
-  });
+  }).catch(next);
 });
 
 router.post('/:id', function (req, res, next) {
   var knex = db.getKnex();
   knex('race').update({
     office_id: req.body.office ? req.body.office : null,
-    time: req.body.time ? req.body.time : null
+    time: req.body.election_time ? req.body.election_time : null
   }).asCallback(function (err) {
     if (err) { return next(err); }
     res.redirect(req.originalUrl);
