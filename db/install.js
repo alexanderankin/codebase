@@ -3,6 +3,12 @@ var knexRe = require('./index');
 function wipe(done) {
   var db = knexRe.getKnex();
   db.schema
+    .dropTableIfExists('election_time')
+    .createTable('election_time', function (t) {
+      t.increments();
+      t.string('name');
+      t.string('code', 20);
+    })
     .dropTableIfExists('organizer')
     .createTable('organizer', function (t) {
       t.increments('id');
@@ -28,7 +34,7 @@ function wipe(done) {
 
     .createTable('office', function (t) {
       t.increments('id');
-      t.integer('map_id').unsigned().references('id').inTable('map').onDelete('cascade');
+      t.integer('map_id').unsigned().references('id').inTable('map').onDelete('set null');
       t.string('key');  // feature.properties[map.feature_key]
       t.string('code');  // slug
       t.string('notes', 1000);
@@ -45,21 +51,30 @@ function wipe(done) {
 
     .createTable('race', function (t) {
       t.increments('id');
-      t.date('time');
-      t.integer('office_id').unsigned().references('id').inTable('office').onDelete('cascade');
+      t.integer('year');
+      t.integer('time').unsigned().references('id').inTable('election_time').notNullable();
+      t.integer('office_id').unsigned().references('id').inTable('office').onDelete('set null');
       t.string('notes', 1000);
     })
 
     .createTable('race_candidate', function (t) {
-      t.integer('race_id').unsigned().references('id').inTable('race').onDelete('cascade').notNullable();
-      t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('cascade').notNullable();
+      t.integer('race_id').unsigned().references('id').inTable('race').onDelete('set null').notNullable();
+      t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('set null').notNullable();
       t.unique([ 'race_id', 'candidate_id' ]);
     })
 
     .asCallback(function (err, result) {
-      knexRe.destroy(function () {
+      db('election_time').insert([
+        { name: 'Primary', code: 'P' },
+        { name: 'General', code: 'G' },
+        { name: 'Special', code: 'S' },
+      ]).asCallback(function (err) {
         if (err) { return done(err); }
-        done();
+
+        knexRe.destroy(function () {
+          if (err) { return done(err); }
+          done();
+        });
       });
     });
 }
