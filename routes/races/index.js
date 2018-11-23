@@ -80,7 +80,7 @@ function formatOfficeDropDown(office, index, array, office_id_name) {
 function getNewRouteInfo(done) {
   var knex = db.getKnex();
   var info = {};
-  knex({ o: 'office' })
+  var offices = knex({ o: 'office' })
     .join({ m: 'map' }, 'm.id', 'o.map_id')
     .select({
       id: 'o.id',
@@ -88,9 +88,22 @@ function getNewRouteInfo(done) {
       type: 'm.name',
       district: 'o.key'
     }).then((offices) => {
-      info['offices'] = offices.map(formatOfficeDropDown);
-      done(null, info);
-    }).catch(done);
+      return offices.map(formatOfficeDropDown);
+    });
+
+  var electionTimes = knex('election_time')
+    .select('id', 'name', 'code')
+    .then(function (elections) {
+      return elections.map(function (el) {
+        var text = [ el.name, ' (', el.code, ')' ].join('');
+        return { id: el.id, text };
+      });
+    });
+
+  Promise.all([ offices, electionTimes ]).then(function (values) {
+    var [ offices, election_times ] = values;
+    done(null, { offices, election_times });
+  }).catch(done);
 }
 
 router.get('/new', function (req, res, next) {
