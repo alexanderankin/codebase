@@ -1,0 +1,65 @@
+extends layout
+
+block body
+  .container.m-3
+    .row
+      .col-lg-6
+        <form method="post">
+          <div class="form-group row">
+            <label for="input-resetpwd" class="col-sm-2 form-control-label">Reset Password</label>
+            <div class="col-sm-10">
+              if (session && session.body && session.body.resetpwd)
+                <input type="password" class="form-control" id="input-resetpwd" name="resetpwd" placeholder="Reset Password" value="#{session.body.resetpwd}" />
+              else
+                <input type="password" class="form-control" id="input-resetpwd" name="resetpwd" placeholder="Reset Password" value="" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="input-mysqlu" class="col-sm-2 form-control-label">MySQL Username</label>
+            <div class="col-sm-10">
+              if (session && session.body && session.body.mysqlu)
+                <input type="text" class="form-control" id="input-mysqlu" name="mysqlu" placeholder="mysqlu" value="#{session.body.mysqlu}" />
+              else
+                <input type="text" class="form-control" id="input-mysqlu" name="mysqlu" placeholder="mysqlu" value="" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="input-mysqlp" class="col-sm-2 form-control-label">MySQL Password</label>
+            <div class="col-sm-10">
+              if (session && session.body && session.body.mysqlp)
+                <input type="password" class="form-control" id="input-mysqlp" name="mysqlp" placeholder="mysqlp" value="#{session.body.mysqlp}" />
+              else
+                <input type="password" class="form-control" id="input-mysqlp" name="mysqlp" placeholder="mysqlp" value="" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="input-mysqldb" class="col-sm-2 form-control-label">MySQL Database</label>
+            <div class="col-sm-10">
+              if (session && session.body && session.body.mysqldb)
+                <input type="text" class="form-control" id="input-mysqldb" name="mysqldb" placeholder="mysqldb" value="#{session.body.mysqldb}" />
+              else
+                <input type="text" class="form-control" id="input-mysqldb" name="mysqldb" placeholder="mysqldb" value="" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2">Install Schema</label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="install" checked> Install Database Schema, discarding old data and installing admin user?
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-secondary">Reset</button>
+            </div>
+          </div>
+        </form>
+      if (query.err)
+        .col-lg-6
+          h3 Error
+            p= query.err

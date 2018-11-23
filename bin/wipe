@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+/**
+ * Script to wipe db and add admin/admin
+ */
+var wipe = require('../db/install').wipe;
+
+wipe(function (err) {
+  if (err) { console.log("Unsuccessful:"); throw err; }
+  console.log("Database", process.env['mysqldb'], 'reset.');
+});

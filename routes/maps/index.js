@@ -111,7 +111,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 });
 
 router.post('/:id', function (req, res, next) {
-  console.log(req.body);
   var knex = db.getKnex();
   knex('map').update({
     name: req.body.name,

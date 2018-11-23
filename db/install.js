@@ -1,7 +1,12 @@
 var knexRe = require('./index');
 
+var hash = require('./util').hash;
+
 function wipe(done) {
   var db = knexRe.getKnex();
+  db.raw('SET FOREIGN_KEY_CHECKS = 0;').asCallback(function (err) {
+    if (err) { return done(err); }
+
   db.schema
     .dropTableIfExists('election_time')
     .createTable('election_time', function (t) {
@@ -59,31 +64,34 @@ function wipe(done) {
     })
 
     .createTable('race_candidate', function (t) {
-      t.integer('race_id').unsigned().references('id').inTable('race').onDelete('set null').notNullable();
-      t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('set null').notNullable();
+      t.increments();
+      t.integer('race_id').unsigned().references('id').inTable('race').onDelete('set null');
+      t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('set null');
       t.unique([ 'race_id', 'candidate_id' ]);
     })
 
     .asCallback(function (err, result) {
-      db('election_time').insert([
-        { name: 'Primary', code: 'P' },
-        { name: 'General', code: 'G' },
-        { name: 'Special', code: 'S' },
-      ]).asCallback(function (err) {
+      if (err) { return done(err); }
+      db.raw('SET FOREIGN_KEY_CHECKS = 1;').then(function () {
+        return db('election_time').insert([
+          { name: 'Primary', code: 'P' },
+          { name: 'General', code: 'G' },
+          { name: 'Special', code: 'S' },
+        ]);
+      }).then(function () {
+        return db('organizer').insert({ username: 'admin@example.com', password: hash('admin') });
+      }).asCallback(function (err) {
         if (err) { return done(err); }
 
         knexRe.destroy(function () {
           if (err) { return done(err); }
+          console.log("done");
           done();
         });
       });
     });
+  });
 }
-
-wipe(function (err) {
-  if (err) { throw err; }
-  console.log("Database", process.env['mysqldb'], 'reset.');
-});
 
 module.exports = {
   wipe
