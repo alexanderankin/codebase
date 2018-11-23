@@ -98,11 +98,10 @@ router.use('/candidates', require('./candidates'));
 router.use('/races', require('./races'));
 
 router.use(function (err, req, res, next) {
-  if (err.skip) return next(err);
   if (err.code === 'ER_BAD_DB_ERROR')
     return res.redirect('/install');
 
-  next();
+  next(err);
 });
 
 module.exports = router;
