@@ -4,6 +4,7 @@ var router = express.Router();
 var db = require('../db');
 var hash = require('../db/util').hash;
 var wipe = require('../db/install').wipe;
+var updateEnv = require('../util').updateEnv;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -17,12 +18,17 @@ router.get('/install', function (req, res, next) {
 });
 
 router.post('/install', function (req, res, next) {
-  if (hash(req.body.resetpwd) === process.env['resetpwd']) {
+  if ((req.body.resetpwd) === process.env['resetpwd']) {
     process.env = Object.assign(process.env, {
       mysqlu: req.body.mysqlu || process.env['mysqlu'],
       mysqlp: req.body.mysqlp || process.env['mysqlp'],
       mysqldb: req.body.mysqldb || process.env['mysqldb'],
     });
+
+    updateEnv(req.body, function (err) {
+      console.log('Error updating .env:', err + '');
+    });
+
     db.reset({
       client: 'mysql',
       connection: {
@@ -45,6 +51,7 @@ router.post('/install', function (req, res, next) {
   }
 
   else {
+    console.log((req.body.resetpwd), process.env['resetpwd']);
     req.session.body = req.body;
     res.redirect('/install?err=Bad Combo');
   }
