@@ -16,6 +16,11 @@ block content
       $("#select-election_time").select2({});
       $("#select-election_time").val('#{election_time_id}');
       $("#select-election_time").trigger('change');
+
+      $("#drop-office").on('click', function() {
+        $('#select-office').val('');
+        $('#select-office').trigger('change');
+      });
     });
 
   <form method="post">
@@ -39,6 +44,7 @@ block content
             each office in offices
               <option value="#{office.id}">#{office.text}</option>
           </select>
+          <button id="drop-office" type="button" class="btn btn-dark btn-sm ml-2">Drop</button>
         else
           p No offices yet!
       </div>

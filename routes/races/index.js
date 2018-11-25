@@ -227,7 +227,7 @@ router.post('/:id', function (req, res, next) {
   knex('race').update({
     office_id: req.body.office ? req.body.office : null,
     time: req.body.election_time ? req.body.election_time : null
-  }).asCallback(function (err) {
+  }).where({ id: req.params.id }).asCallback(function (err) {
     if (err) { return next(err); }
     res.redirect(req.originalUrl);
   });
