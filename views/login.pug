@@ -1,6 +1,19 @@
 extends index
 
 block content
+  if (messages && messages.login_error && messages.login_error.length)
+    script.
+      $(function() {
+        !{JSON.stringify(messages.login_error)}.forEach(function(e) {
+          $.toast({
+            heading: 'Login Error',
+            text: e,
+            position: 'top-right',
+            icon: 'error',
+          });
+        });
+      });
+
   .container.mt-3
     .jumbotron.
       Please Login

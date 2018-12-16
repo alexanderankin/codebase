@@ -71,7 +71,10 @@ function hasUP(req) {
 }
 
 router.post('/login', function (req, res, next) {
-  if (!hasUP(req)) { return res.redirect('/login'); }
+  if (!hasUP(req)) {
+    req.flash('login_error', 'One or more fields left blank');
+    return res.redirect('/login');
+  }
 
   var knex = db.getKnex();
   knex({ u: 'organizer' })
@@ -83,11 +86,12 @@ router.post('/login', function (req, res, next) {
       
       if (result.length === 1) {
         req.session.uid = result.pop().uid;
-        var redir = req.session.destination || '/login';
+        var redir = req.session.destination || '/contests';
         req.session.destination = null;
         return res.redirect(redir);
       }
 
+      req.flash('login_error', 'Bad Combo');
       res.redirect('/login');
     });
 });
