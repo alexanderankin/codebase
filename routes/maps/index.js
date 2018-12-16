@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
     if (err) { return next(err); }
 
     var maps = rows.map(map => { delete map.notes; return map; });
-    res.render('maps', {
+    res.render('entities/maps', {
       scripts: [
         'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js'
       ],
@@ -60,7 +60,7 @@ router.get('/:id', function (req, res, next) {
         getFeatureProperties(map.geojson, function (err, properties) {
           if (err) { return next(err); res.redirect('/maps'); }
 
-          res.render('map', {
+          res.render('entities/map', {
             scripts: [
               'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
             ],

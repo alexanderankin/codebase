@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     .asCallback(function (err, offices) {
       if (err) { return next(err); }
 
-      res.render('offices', {
+      res.render('entities/offices', {
         name: req.session.uid,
         offices
       });
@@ -71,7 +71,7 @@ router.get('/new', function(req, res, next) {
   getNewOfficeLocals(req, function (err, locals) {
     if (err) { return next(err); }
 
-    res.render('newoffice', {
+    res.render('entities/newoffice', {
       scripts: [
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
       ],
@@ -118,7 +118,7 @@ router.get('/:id', function (req, res, next) {
       knex('map').select('id', 'name').asCallback(function (err, maps) {
         if (err) { return next(err); }
 
-        res.render('office', {
+        res.render('entities/office', {
           scripts: [
             'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
           ],

@@ -43,7 +43,7 @@ router.get('/', function(req, res, next) {
     .asCallback(function (err, races) {
       if (err) { return next(err); }
 
-      res.render('races', {
+      res.render('entities/races', {
         name: req.session.uid,
         races
       });
@@ -116,7 +116,7 @@ function getNewRouteInfo(done) {
 router.get('/new', function (req, res, next) {
   getNewRouteInfo(function (err, info) {
     if (err) { return next(err); }
-    res.render('newrace', {
+    res.render('entities/newrace', {
       scripts: [
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
       ],
@@ -203,7 +203,7 @@ router.get('/:id', function (req, res, next) {
 
   Promise.all([ race, offices, candidates, rcs, ets ]).then(function (values) {
     var [ race, offices, cands, rcs, ets ] = values;
-    res.render('race', {
+    res.render('entities/race', {
       scripts: [
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js'
       ],

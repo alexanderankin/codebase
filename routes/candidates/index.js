@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   knex('candidate').select('*').asCallback(function (err, candidates) {
     if (err) return next(err);
 
-    res.render('candidates', {
+    res.render('entities/candidates', {
       name: req.session.uid,
       candidates
     });
@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/new', function (req, res, next) {
-  res.render('newcandidate', {
+  res.render('entities/newcandidate', {
     name: req.session.uid
 
   });
@@ -52,7 +52,7 @@ router.get('/:id', function (req, res, next) {
       if (err) { return next(err); }
       if (!rows || !rows[0]) { return next(new Error('Bad candidate id')); }
       
-      res.render('candidate', {
+      res.render('entities/candidate', {
         candidate: rows[0],
         name: req.session.uid
       });
