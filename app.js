@@ -11,6 +11,7 @@ var logger = require('morgan');
 
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
+var flash = require('express-flash');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -25,7 +26,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
-}))
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('code ninja'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
