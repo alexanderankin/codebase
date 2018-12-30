@@ -1,11 +1,16 @@
 extends index
 
 block content
-  <div class="container mt-3">
-    <div class="starter-template">
-      //- h1= title
-      //- p Welcome to #{title}
-      <h1>Bootstrap starter template</h1>
-      <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-    </div>
-  </div><!-- /.container -->
+  .container
+    .starter-template
+      h1 Contest Base
+      p.lead.
+        Contest Base is a tool for organizers to talk to and about elected
+        officials, a database of contests.
+      p.lead
+        | The source code is available online at 
+        a(href='https://github.com/alexanderankin/contest-base') Github
+        | , 
+        if (instance_name)
+          | this instance is hosted by and for #{instance_name},
+        | and made possible by the volunteer labor of Democratic Socialists.
