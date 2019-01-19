@@ -29,6 +29,11 @@ If you need terminal access inside your application (for example, to install npm
 `docker-compose exec api bash`
 (Note: exec requires that we choose a service, which is why we have to specify api, which is defined in our docker/docker-compose.yml)
 
+Open up terminal access inside the container (see above) and run `./bin/wipe` in order to initialize the database. Then run `./bin/adduser someone@example.org password` to add a new user.
+
+You can now log into the application and begin using it. Add new users
+as necessary.
+
 ## Potential Problems
 
 ### Mysql auth error
