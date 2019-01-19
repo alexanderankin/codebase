@@ -20,9 +20,9 @@ router.get('/install', function (req, res, next) {
 router.post('/install', function (req, res, next) {
   if ((req.body.resetpwd) === process.env['resetpwd']) {
     process.env = Object.assign(process.env, {
-      mysqlu: req.body.mysqlu || process.env['mysqlu'],
-      mysqlp: req.body.mysqlp || process.env['mysqlp'],
-      mysqldb: req.body.mysqldb || process.env['mysqldb'],
+      mysqlu: req.body.mysqlu || process.env['MYSQL_USER'],
+      mysqlp: req.body.mysqlp || process.env['MYSQL_PASSWORD'],
+      mysqldb: req.body.mysqldb || process.env['MYSQL_DATABASE'],
     });
 
     updateEnv(req.body, function (err) {
@@ -32,10 +32,10 @@ router.post('/install', function (req, res, next) {
     db.reset({
       client: 'mysql',
       connection: {
-        host: '127.0.0.1',
-        user: process.env['mysqlu'],
-        password: process.env['mysqlp'],
-        database: process.env['mysqldb']
+        host: process.env['MYSQL_HOST'],
+        user: process.env['MYSQL_USER'],
+        password: process.env['MYSQL_PASSWORD'],
+        database: process.env['MYSQL_DATABASE']
       }
     }, function () {
       req.session.body = null;
@@ -80,7 +80,7 @@ router.post('/login', function (req, res, next) {
     .where('u.password', hash(req.body.password))
     .asCallback(function (err, result) {
       if (err) { return next(err); }
-      
+
       if (result.length === 1) {
         req.session.uid = result.pop().uid;
         var redir = req.session.destination || '/login';

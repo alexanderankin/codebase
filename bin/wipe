@@ -7,5 +7,5 @@ var wipe = require('../db/install').wipe;
 
 wipe(function (err) {
   if (err) { console.log("Unsuccessful:"); throw err; }
-  console.log("Database", process.env['mysqldb'], 'reset.');
+  console.log("Database", process.env['MYSQL_DATABASE'], 'reset.');
 });
