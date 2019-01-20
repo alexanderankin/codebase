@@ -1,0 +1,34 @@
+version: '3'
+services:
+  database:
+    image: mysql:8
+    volumes:
+      - ./mysql:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    networks:
+      - contestbase
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: api
+    # command: ["./wait-for-it/wait-for-it.sh", "postgres:5432", "-t", "300", "--", "npm", "run", "start"]
+    command: ["./wait-for-it/wait-for-it.sh", "database:3306", "-t", "300", "--", "npm", "run", "start"]
+    # command: ["./wait-for-it/wait-for-it.sh", "postgres:5432", "-t", "300", "--", "npm", "run", "test"]
+    # command: tail -f /dev/null
+    volumes:
+      - ./:/usr/src/api
+      - /usr/src/api/node_modules
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+    networks:
+      - contestbase
+networks:
+  contestbase:
+    driver: bridge
