@@ -20,9 +20,9 @@ router.get('/install', function (req, res, next) {
 router.post('/install', function (req, res, next) {
   if ((req.body.resetpwd) === process.env['resetpwd']) {
     process.env = Object.assign(process.env, {
-      mysqlu: req.body.mysqlu || process.env['MYSQL_USER'],
-      mysqlp: req.body.mysqlp || process.env['MYSQL_PASSWORD'],
-      mysqldb: req.body.mysqldb || process.env['MYSQL_DATABASE'],
+      MYSQL_USER: req.body.mysqlu || process.env['MYSQL_USER'],
+      MYSQL_PASSWORD: req.body.mysqlp || process.env['MYSQL_PASSWORD'],
+      MYSQL_DATABASE: req.body.mysqldb || process.env['MYSQL_DATABASE'],
     });
 
     updateEnv(req.body, function (err) {
