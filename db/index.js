@@ -7,10 +7,10 @@ require('dotenv').config({
 module.exports = new knexRe({
   client: 'mysql',
   connection: {
-    host: '127.0.0.1',
-    user: process.env['mysqlu'],
-    password: process.env['mysqlp'],
-    database: process.env['mysqldb']
+    host: process.env['MYSQL_HOST'],
+    user: process.env['MYSQL_USER'],
+    password: process.env['MYSQL_PASSWORD'],
+    database: process.env['MYSQL_DATABASE']
   }
 });
 
