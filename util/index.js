@@ -2,6 +2,9 @@ var fs = require('fs');
 var path = require('path');
 var pj = function() { return path.join.apply(null, arguments); };
 
+var caching = require('./caching');
+var db = require('../db');
+
 /**
  * getFeatureProperties
  * 
@@ -98,6 +101,41 @@ function copyTemplateIfMissing(done) {
     );
 }
 
+function ensureLoginMiddleware(req, res, next) {
+  if (req.session.uid) {
+    if (caching.get(req.session.uid)) {
+      res.locals.organizer = caching.get(req.session.uid);
+      return next();
+    }
+
+    var knex = db.getKnex();
+    var q = knex('organizer').select('*').where({ id: req.session.uid });
+    return q.asCallback(function (err, rows) {
+      if (err) { return next(err); }
+
+      caching.set(req.session.uid, rows[0]);
+      res.locals.organizer = rows[0];
+      next();
+    });
+  }
+  req.session.destination = req.originalUrl;
+  res.redirect('/login');
+}
+
+function makeLoginMiddleware(redirect) {
+  function ensureLoginMiddleware_(req, res, next) {
+    if (req.session.uid) {
+      return next();
+    }
+    req.session.destination = req.originalUrl;
+    res.redirect(redirect);
+  }
+  
+  return ensureLoginMiddleware_;
+}
+
+
 module.exports = {
-  getFeatureProperties, getFeatures, updateEnv, copyTemplateIfMissing
+  getFeatureProperties, getFeatures, updateEnv, copyTemplateIfMissing,
+  ensureLoginMiddleware, makeLoginMiddleware
 };

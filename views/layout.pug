@@ -25,5 +25,32 @@ html
         <link rel="stylesheet" href="#{stylesheet}" crossorigin="anonymous">
 
     include partials/head.html
+
+    if (messages && messages.success && messages.success.length)
+      script.
+        $(function() {
+          !{JSON.stringify(messages.success)}.forEach(function(e) {
+            $.toast({
+              heading: 'Success',
+              text: e,
+              position: 'top-right',
+              icon: 'success',
+            });
+          });
+        });
+
+    if (messages && messages.error && messages.error.length)
+      script.
+        $(function() {
+          !{JSON.stringify(messages.error)}.forEach(function(e) {
+            $.toast({
+              heading: 'Error',
+              text: e,
+              position: 'top-right',
+              icon: 'error',
+            });
+          });
+        });
+
   body
     block body

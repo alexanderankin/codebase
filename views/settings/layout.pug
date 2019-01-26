@@ -1,0 +1,23 @@
+extends ../interface
+
+block content
+  .row
+    .col-md-3
+      block left
+        a(href='/settings')
+          h3 Settings
+
+        style.
+          #settings-left-menu { width: fit-content; }
+
+        ul.nav.nav-pills.flex-column#settings-left-menu
+          li.nav-item
+            a#settings-profile.nav-link(href="/settings/profile") Profile
+          li.nav-item
+            a#settings-database.nav-link(href="/settings/database") Data
+          li.nav-item
+            a#settings-organizers.nav-link(href="/settings/organizers" ) Onboarding
+
+    .col-md-9
+      .mt-3.mb-3
+        block right

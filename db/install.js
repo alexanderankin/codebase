@@ -19,8 +19,8 @@ function wipe(done) {
         t.string('username').notNull().unique();
         t.string('password', 32);
         t.string('name');
-        t.string('email');
         t.string('phone');
+        t.timestamp("joined").defaultTo(db.fn.now());
       })
 
       .dropTableIfExists('map')

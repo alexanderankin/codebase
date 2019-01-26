@@ -2,14 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 var db = require('../../db');
+var util = require('../../util');
 
-router.use(function (req, res, next) {
-  if (req.session.uid) {
-    return next();
-  }
-  req.session.destination = req.originalUrl;
-  res.redirect('/login');
-});
+router.use(util.ensureLoginMiddleware);
 
 /* GET /candidates */
 router.get('/', function(req, res, next) {

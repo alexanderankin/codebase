@@ -3,14 +3,9 @@ var router = express.Router();
 
 var db = require('../../db');
 var getFeatures = require('../../util').getFeatures;
+var util = require('../../util');
 
-router.use(function (req, res, next) {
-  if (req.session.uid) {
-    return next();
-  }
-  req.session.destination = req.originalUrl;
-  res.redirect('/login');
-});
+router.use(util.ensureLoginMiddleware);
 
 /* GET /offices */
 router.get('/', function(req, res, next) {

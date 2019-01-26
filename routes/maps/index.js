@@ -9,14 +9,9 @@ var upload = multer({
 });
 
 var db = require('../../db');
+var util = require('../../util');
 
-router.use(function (req, res, next) {
-  if (req.session.uid) {
-    return next();
-  }
-  req.session.destination = req.originalUrl;
-  res.redirect('/login');
-});
+router.use(util.ensureLoginMiddleware);
 
 /* GET /maps */
 router.get('/', function(req, res, next) {

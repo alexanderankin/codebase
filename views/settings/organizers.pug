@@ -1,0 +1,85 @@
+extends layout
+
+append left
+  script.
+    $(function() { $('#settings-organizers').addClass('active'); });
+
+block right
+  p.
+    This is the screen that onboards people. Here you can see who you invited,
+    and invite others. If you were invited, you can see who invited you,
+    otherwise just the time you joined.
+
+  if (onboarder)
+    p.
+      You were onboarded by #{onboarder} on #{time}.
+  else
+    p.
+      You were onboarded on #{onboarder}.
+
+  <div class="card mb-5">
+    <div class="card-header">
+      <h4 class="mb-0">Add Organizers</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" action="/settings/onboard">
+        <h3>Send Invitation</h3>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="pills-manual-tab" data-toggle="pill" href="#pills-manual" role="tab" aria-controls="pills-manual" aria-selected="true">Code</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="pills-sms-tab" data-toggle="pill" href="#pills-sms" role="tab" aria-controls="pills-sms" aria-selected="false">SMS</a>
+          </li>
+          //- <li class="nav-item">
+          //-   <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+          //- </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="pills-manual" role="tabpanel" aria-labelledby="pills-manual-tab">
+            p.
+              Send the following link to an organizer to onboard them onto this tool:
+
+            p #[a(href="#{codeUrl}") #[pre #{codeUrl}]]
+          </div>
+          <div class="tab-pane fade" id="pills-sms" role="tabpanel" aria-labelledby="pills-sms-tab">
+            <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Phone</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="tw-phone">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Account SID</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="tw-account-sid">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Auth Token</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="tw-auth-token">
+              </div>
+            </div>
+          </div>
+          //- <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+          //- </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card mb-5">
+    <div class="card-header">
+      <h4 class="mb-0">View Organizers</h4>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        <div class="form-group row">
+          <label class="col-lg-3 col-form-label form-control-label">id</label>
+          <div class="col-lg-9">
+            <input class="form-control" type="text" name="name" value="#{id}" disabled>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>

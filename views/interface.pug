@@ -33,12 +33,17 @@ block body
 
       <div class="btn-group">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          | Welcome, #{name}!
+          if (organizer.name)
+            | Welcome, #{organizer.name}!
+          else
+            | Welcome, #{organizer.id}!
         </button>
         script.
           $(function() {if ($(window).width() < 768) $('.dropdown-menu').toggleClass('dropdown-menu-right');});
         <div class="dropdown-menu dropdown-menu-right">
-          <button class="dropdown-item" type="button">Settings</button>
+          <button class="dropdown-item" type="button">
+            <a href="/settings">Settings</a>
+          </button>
           <button class="dropdown-item" type="button">Manage/Add Content</button>
           <button class="dropdown-item" type="button">
             <a href="/logout">Logout</a>

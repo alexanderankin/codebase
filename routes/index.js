@@ -108,6 +108,9 @@ router.use('/offices', require('./offices'));
 router.use('/candidates', require('./candidates'));
 router.use('/races', require('./races'));
 
+/* user specific pages */
+router.use('/settings', require('./settings'));
+
 router.use(function (err, req, res, next) {
   if (err.code === 'ER_BAD_DB_ERROR')
     return res.redirect('/install');
