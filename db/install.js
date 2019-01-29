@@ -17,10 +17,11 @@ function wipe(done) {
       .createTable('organizer', function (t) {
         t.increments('id');
         t.string('username').notNull().unique();
-        t.string('password', 32);
+        t.string('password', 60);
         t.string('name');
         t.string('phone');
         t.timestamp("joined").defaultTo(db.fn.now());
+        t.string('notes', 1000);
       })
 
       .dropTableIfExists('map')
@@ -49,6 +50,7 @@ function wipe(done) {
         t.integer('age');
         t.string('phone');
         t.string('email');
+        t.string('notes', 1000);
       })
 
       .dropTableIfExists('race')
@@ -67,6 +69,7 @@ function wipe(done) {
         t.integer('race_id').unsigned().references('id').inTable('race').onDelete('set null');
         t.integer('candidate_id').unsigned().references('id').inTable('candidate').onDelete('set null');
         t.unique([ 'race_id', 'candidate_id' ]);
+        t.string('notes', 1000);
       });
   }).then(function () {
     return db.raw('SET FOREIGN_KEY_CHECKS = 1;');
