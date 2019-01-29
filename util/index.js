@@ -61,6 +61,7 @@ function getFeatures(geojson, key, done) {
 function updateEnv(args, done) {
   done = done || function(e) { if (e) throw e; };
   fs.readFile(pj(__dirname, '..', '.env'), 'utf-8', function (err, text) {
+    if (err) { console.log("err", err); text = ""; }
     var lines = text.split('\n');
     var config = lines.reduce(function (conf, line) {
       var firstEq = line.indexOf('=');
@@ -70,9 +71,9 @@ function updateEnv(args, done) {
       conf[field] = value;
       return conf;
     }, {});
-    
+
     for (var key in args) {
-      if (key in config) {
+      if (keyIsInTemplateEnv(key)) {
         config[key] = args[key];
       }
     }
@@ -134,8 +135,26 @@ function makeLoginMiddleware(redirect) {
   return ensureLoginMiddleware_;
 }
 
+function existsEnv() {
+  return fs.existsSync(pj(__dirname, '..', '.env'));
+}
+
+var templateEnvFilepath = pj(__dirname, '..', 'template.env'),
+  templateKeys = fs.readFileSync(templateEnvFilepath, 'utf-8')
+  .split('\n')
+  .map(function(line) { return line.split('=').shift(); });
+
+function keyIsInTemplateEnv(key) {
+  return templateKeys.indexOf(key) > -1;
+}
 
 module.exports = {
-  getFeatureProperties, getFeatures, updateEnv, copyTemplateIfMissing,
-  ensureLoginMiddleware, makeLoginMiddleware
+  getFeatureProperties,
+  getFeatures,
+  updateEnv,
+  existsEnv,
+  keyIsInTemplateEnv,
+  copyTemplateIfMissing,
+  ensureLoginMiddleware,
+  makeLoginMiddleware
 };

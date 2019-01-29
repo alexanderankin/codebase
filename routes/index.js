@@ -4,7 +4,7 @@ var router = express.Router();
 var db = require('../db');
 var hash = require('../db/util').hash;
 var wipe = require('../db/install').wipe;
-var updateEnv = require('../util').updateEnv;
+var util = require('../util');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -17,29 +17,41 @@ router.get('/install', function (req, res, next) {
   res.render('install');
 });
 
+/**
+ * 
+ */
 router.post('/install', function (req, res, next) {
-  if ((req.body.resetpwd) === process.env['resetpwd']) {
+  var b = req.body;
+
+  // only allow this code to be run if not yet installed
+  var installed = util.existsEnv();
+  if (!installed) {
+    // update process environment variables
     process.env = Object.assign(process.env, {
-      MYSQL_USER: req.body.mysqlu || process.env['MYSQL_USER'],
-      MYSQL_PASSWORD: req.body.mysqlp || process.env['MYSQL_PASSWORD'],
-      MYSQL_DATABASE: req.body.mysqldb || process.env['MYSQL_DATABASE'],
+      MYSQL_USER    : b['MYSQL_USER']     || process.env['MYSQL_USER'],
+      MYSQL_PASSWORD: b['MYSQL_PASSWORD'] || process.env['MYSQL_PASSWORD'],
+      MYSQL_DATABASE: b['MYSQL_DATABASE'] || process.env['MYSQL_DATABASE'],
+      MYSQL_HOST    : b['MYSQL_HOST']     || process.env['MYSQL_HOST'],
     });
 
-    updateEnv(req.body, function (err) {
+    // create .env file
+    util.updateEnv(req.body, function (err) {
       console.log('Error updating .env:', err + '');
     });
 
     db.reset({
       client: 'mysql',
       connection: {
-        host: process.env['MYSQL_HOST'],
+        host: process.env['MYSQL_HOST'] || 'localhost',
         user: process.env['MYSQL_USER'],
         password: process.env['MYSQL_PASSWORD'],
         database: process.env['MYSQL_DATABASE']
       }
     }, function () {
       req.session.body = null;
-      if (req.body.install !== 'on')
+
+      // if install option is checked on form
+      if (b.install !== 'on')
         return res.redirect('/');
 
       wipe(err => {
@@ -51,9 +63,8 @@ router.post('/install', function (req, res, next) {
   }
 
   else {
-    console.log((req.body.resetpwd), process.env['resetpwd']);
     req.session.body = req.body;
-    res.redirect('/install?err=Bad Combo');
+    res.redirect('/install?err=Already installed, refusing to overwrite');
   }
 });
 

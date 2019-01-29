@@ -6,39 +6,39 @@ block body
       .col-lg-6
         <form method="post">
           <div class="form-group row">
-            <label for="input-resetpwd" class="col-sm-2 form-control-label">Reset Password</label>
-            <div class="col-sm-10">
-              if (session && session.body && session.body.resetpwd)
-                <input type="password" class="form-control" id="input-resetpwd" name="resetpwd" placeholder="Reset Password" value="#{session.body.resetpwd}" />
-              else
-                <input type="password" class="form-control" id="input-resetpwd" name="resetpwd" placeholder="Reset Password" value="" />
-            </div>
-          </div>
-          <div class="form-group row">
             <label for="input-mysqlu" class="col-sm-2 form-control-label">MySQL Username</label>
             <div class="col-sm-10">
-              if (session && session.body && session.body.mysqlu)
-                <input type="text" class="form-control" id="input-mysqlu" name="mysqlu" placeholder="mysqlu" value="#{session.body.mysqlu}" />
+              if (session && session.body && session.body.MYSQL_USER)
+                <input type="text" class="form-control" id="input-mysqlu" name="MYSQL_USER" placeholder="mysqlu" value="#{session.body.MYSQL_USER}" />
               else
-                <input type="text" class="form-control" id="input-mysqlu" name="mysqlu" placeholder="mysqlu" value="" />
+                <input type="text" class="form-control" id="input-mysqlu" name="MYSQL_USER" placeholder="mysqlu" value="" />
             </div>
           </div>
           <div class="form-group row">
             <label for="input-mysqlp" class="col-sm-2 form-control-label">MySQL Password</label>
             <div class="col-sm-10">
-              if (session && session.body && session.body.mysqlp)
-                <input type="password" class="form-control" id="input-mysqlp" name="mysqlp" placeholder="mysqlp" value="#{session.body.mysqlp}" />
+              if (session && session.body && session.body.MYSQL_PASSWORD)
+                <input type="password" class="form-control" id="input-mysqlp" name="MYSQL_PASSWORD" placeholder="mysqlp" value="#{session.body.MYSQL_PASSWORD}" />
               else
-                <input type="password" class="form-control" id="input-mysqlp" name="mysqlp" placeholder="mysqlp" value="" />
+                <input type="password" class="form-control" id="input-mysqlp" name="MYSQL_PASSWORD" placeholder="mysqlp" value="" />
             </div>
           </div>
           <div class="form-group row">
             <label for="input-mysqldb" class="col-sm-2 form-control-label">MySQL Database</label>
             <div class="col-sm-10">
-              if (session && session.body && session.body.mysqldb)
-                <input type="text" class="form-control" id="input-mysqldb" name="mysqldb" placeholder="mysqldb" value="#{session.body.mysqldb}" />
+              if (session && session.body && session.body.MYSQL_DATABASE)
+                <input type="text" class="form-control" id="input-mysqldb" name="MYSQL_DATABASE" placeholder="mysqldb" value="#{session.body.MYSQL_DATABASE}" />
               else
-                <input type="text" class="form-control" id="input-mysqldb" name="mysqldb" placeholder="mysqldb" value="" />
+                <input type="text" class="form-control" id="input-mysqldb" name="MYSQL_DATABASE" placeholder="mysqldb" value="" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="input-mysqlh" class="col-sm-2 form-control-label">MySQL Host</label>
+            <div class="col-sm-10">
+              if (session && session.body && session.body.MYSQL_HOST)
+                <input type="text" class="form-control" id="input-mysqlh" name="MYSQL_HOST" placeholder="mysqlh" value="#{session.body.MYSQL_HOST}" />
+              else
+                <input type="text" class="form-control" id="input-mysqlh" name="MYSQL_HOST" placeholder="mysqlh" value="" />
             </div>
           </div>
 
