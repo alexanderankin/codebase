@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var dn = __dirname;
+var pj = path.join.bind(path, dn);
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+
+// self explanatory
+var validCommands = ['user', 'database', 'data'];
+// if this is false, display the help message
+var givenValidCommand = true;
+
+program
+  .version(require(pj('..', 'package')).version)
+  .description('Command Line interface to Contest Base')
+  .action(function(c) { givenValidCommand = validCommands.indexOf(c) != -1; })
+
+
+// TODO figure these out
+// this description (2nd arg) matches sub command program description
+program.command('user', 'Manage users');
+program.command('database', 'Perform database operations');
+program.command('data', 'Manage contest and map data');
+
+program.parse(process.argv); // exits for command with action.
+if (!givenValidCommand) { program.outputHelp(); }

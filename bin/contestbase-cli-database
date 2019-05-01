@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var dn = __dirname;
+var pj = path.join.bind(path, dn);
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+
+var validCommands = ['import', 'export', 'install'];
+var givenValidCommand = true;
+
+program
+  .version(require(pj('..', 'package')).version)
+  .description('Perform operations on the database')
+  .action(function(c) { givenValidCommand = validCommands.indexOf(c) != -1; })
+
+program
+  .command('import')
+  .option('-i, --input <filename>', 'Input file (for import command)')
+  .action(dbImport);
+program
+  .command('export')
+  .option('-o, --output <filename>', 'Output file (for export command)')
+  .action(dbExport);
+
+program
+  .command('install')
+  .action(function() {
+    require(pj('..', 'db', 'install')).wipe(function (err) {
+      if (err) { console.log("Unsuccessful:"); throw err; }
+      console.log("Database", process.env['MYSQL_DATABASE'], 'reset.');
+    });
+  });
+
+function dbImport(options, cmd) {
+  console.log("importing from", cmd.input || 'stdin');
+}
+
+function dbExport(options, cmd) {
+  console.log("exporting to", cmd.output || 'stdout');
+}
+
+program.parse(process.argv); // exits for command with action.
+if (!givenValidCommand) { program.outputHelp(); }

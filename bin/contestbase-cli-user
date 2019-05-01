@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var dn = __dirname;
+var pj = path.join.bind(path, dn);
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+
+var validCommands = ['import', 'export', 'install'];
+var givenValidCommand = true;
+
+program
+  .version(require(pj('..', 'package')).version)
+  .description('Manage contestbase users')
+  .action(function(c) { givenValidCommand = validCommands.indexOf(c) != -1; })
+
+program
+  .command('add <username> <password>')
+  .description('Add username with password')
+  .action(function (username, password, command) {
+    console.log("Adding user", username, password);
+    var knex = require(pj('..', 'db')).getKnex();
+    var hash = require(pj('..', 'db', 'util')).hash;
+
+    knex('organizer').insert({
+      username: username,
+      password: hash(password),
+    }).asCallback(function (err, result) {
+      if (err) throw err;
+
+      console.log("Done enrolling", process.argv[2], "with id", result[0]);
+      knex.destroy(function () {
+        process.exit(0);
+      });
+    });
+
+  })
+
+program
+  .command('set [username] [field]')
+
+program.parse(process.argv); // exits if found
+if (!givenValidCommand) { program.outputHelp(); }
+
+
+// // console.log(process.argv)
+// if (a = program.parse(process.argv))
+//   console.log("Command not found"), program.outputHelp();
+
+// console.log("a", a.length);
+

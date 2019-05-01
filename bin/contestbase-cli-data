@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var dn = __dirname;
+var pj = path.join.bind(path, dn);
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+
+var validCommands = ['import', 'export', 'install'];
+var givenValidCommand = true;
+
+program
+  .version(require(pj('..', 'package')).version)
+  .description('Manage contest and map data')
+  .action(function(c) { givenValidCommand = validCommands.indexOf(c) != -1; })
+
+program
+  .command('import')
+  .option('-i, --input <filename>', 'Input file (for import command)')
+  .action(dbImport);
+
+
+program.parse(process.argv); // exits for command with action.
+if (!givenValidCommand) { program.outputHelp(); }
