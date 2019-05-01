@@ -17,7 +17,7 @@ function wipe(done) {
       .createTable('organizer', function (t) {
         t.increments('id');
         t.string('username').notNull().unique();
-        t.string('password', 32);
+        t.string('passwordHash', 60);
         t.string('name');
         t.string('email');
         t.string('phone');
@@ -76,8 +76,6 @@ function wipe(done) {
       { name: 'General', code: 'G' },
       { name: 'Special', code: 'S' },
     ]);
-  }).then(function () {
-    return db('organizer').insert({ username: 'admin@example.com', password: hash('admin') });
   }).asCallback(function (err) {
     if (err) { return done(err); }
 

@@ -72,28 +72,30 @@ function hasUP(req) {
 
 router.post('/login', function (req, res, next) {
   if (!hasUP(req)) { return res.redirect('/login'); }
+  var b = req.body;
 
-  var knex = db.getKnex();
-  knex({ u: 'organizer' })
-    .select({ uid: 'u.id' })
-    .where('u.username', req.body.email)
-    .where('u.password', hash(req.body.password))
-    .asCallback(function (err, result) {
-      if (err) { return next(err); }
+  // login
+  db.util.login(b.email, b.password, function (err, user) {
+    // render errors
+    if (err) { return next(err); }
 
-      if (result.length === 1) {
-        req.session.uid = result.pop().uid;
-        var redir = req.session.destination || '/login';
-        req.session.destination = null;
-        return res.redirect(redir);
-      }
+    // store user and redirect if necessary
+    if (user) {
+      req.session.uid = user.id;
+      req.session.user = user;
+      var redir = req.session.destination || '/login';
+      req.session.destination = null;
+      return res.redirect(redir);
+    }
 
-      res.redirect('/login');
-    });
+    // login failure
+    res.redirect('/login');
+  });
 });
 
 router.get('/logout', function(req, res, next) {
   req.session.uid = null;
+  req.session.user = null;
   res.redirect('/');
 });
 

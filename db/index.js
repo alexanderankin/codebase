@@ -14,4 +14,6 @@ module.exports = new knexRe({
   }
 });
 
+module.exports.util = require('./util');
+
 // module.exports.getKnex().on('query', q => console.log(q.sql));
