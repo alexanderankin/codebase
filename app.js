@@ -25,7 +25,8 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
-}))
+}));
+app.use(function(req, r, next) { r.locals.session = req.session; next(); });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

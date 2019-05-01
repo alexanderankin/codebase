@@ -100,11 +100,11 @@ router.get('/logout', function(req, res, next) {
 });
 
 /* GET entity pages. */
-router.use('/contests', (r, s, n) => s.redirect('/races'));
+router.use('/contests', require('./races'));
+router.use('/races', (r, s, n) => s.redirect('/contests'));
 router.use('/maps', require('./maps'));
 router.use('/offices', require('./offices'));
 router.use('/candidates', require('./candidates'));
-router.use('/races', require('./races'));
 
 router.use(function (err, req, res, next) {
   if (err.code === 'ER_BAD_DB_ERROR')
