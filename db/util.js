@@ -1,4 +1,3 @@
-var md5 = require('md5');
 var bcrypt = require('bcrypt-nodejs');
 
 var knexRe = require('./index');
@@ -6,10 +5,6 @@ var knexRe = require('./index');
 require('dotenv').config({
   path: require('path').join(__dirname, '..', '.env')
 });
-
-function salt(string) {
-  return md5(string + process.env['password_salt']);
-}
 
 /**
  * Register a new user with callback
