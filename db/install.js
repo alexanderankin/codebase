@@ -1,6 +1,6 @@
 var knexRe = require('./index');
 
-var hash = require('./util').hash;
+var dbutil = require('./util');
 
 function wipe(done) {
   var db = knexRe.getKnex();
@@ -79,14 +79,20 @@ function wipe(done) {
       { name: 'General', code: 'G' },
       { name: 'Special', code: 'S' },
     ]);
-  }).then(function () {
-    return db('organizer').insert({ username: 'admin@example.com', password: hash('admin') });
   }).asCallback(function (err) {
     if (err) { return done(err); }
 
-    knexRe.destroy(function () {
-      if (err) { return done(err); }
-      done();
+    dbutil.hash('admin', function (err, hashed) {
+      db('organizer')
+        .insert({ username: 'admin@example.com', password: hashed })
+        .asCallback(function (err) {
+          if (err) { return done(err); }
+
+          knexRe.destroy(function () {
+            if (err) { return done(err); }
+            done();
+          });
+        });
     });
   });
 }

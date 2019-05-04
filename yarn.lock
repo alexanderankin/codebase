@@ -149,6 +149,11 @@ basic-auth@~2.0.0:
   dependencies:
     safe-buffer "5.1.2"
 
+bcryptjs@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
+  integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
+
 bignumber.js@4.1.0:
   version "4.1.0"
   resolved "https://dev.ankin.info:4874/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
@@ -1009,10 +1014,9 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://dev.ankin.info:4874/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
 
-knex-reconnector@^0.0.1:
+"knex-reconnector@git+https://github.com/alexanderankin/knex-connector.git":
   version "0.0.1"
-  resolved "https://dev.ankin.info:4874/knex-reconnector/-/knex-reconnector-0.0.1.tgz#1152b91a762b91d1004e77acf838e2545c9936dc"
-  integrity sha512-8Pmj+ByORraZO21+2/KF1AR2iwAJO1ZjCSzGQI541eQGljtXTO5kiyI4OWJQ7lhlCYN0d1L3PirNEGyuohJFcA==
+  resolved "git+https://github.com/alexanderankin/knex-connector.git#647a3c3d86a43c557765a2fb20d01e384720b478"
   dependencies:
     knex "^0.15.2"
 

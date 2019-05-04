@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var db = require('../db');
-var hash = require('../db/util').hash;
+var dbutil = require('../db/util');
 var wipe = require('../db/install').wipe;
 var util = require('../util');
 
@@ -89,19 +89,37 @@ router.post('/login', function (req, res, next) {
 
   var knex = db.getKnex();
   knex({ u: 'organizer' })
-    .select({ uid: 'u.id' })
+    .select({ uid: 'u.id'})
+    .select({ name: 'u.name' })
+    .select({ password: 'u.password' })
     .where('u.username', req.body.email)
-    .where('u.password', hash(req.body.password))
     .asCallback(function (err, result) {
       if (err) { return next(err); }
 
       if (result.length === 1) {
-        req.session.uid = result.pop().uid;
-        var redir = req.session.destination || '/contests';
-        req.session.destination = null;
-        return res.redirect(redir);
+        var user = result.pop();
+        console.log('verifying', req.body.password, user.password);
+        dbutil.verify(req.body.password, user.password, function (e, valid) {
+          if (e) { return next(e); }
+          if (valid) {
+            req.session.uid = user.uid;
+            req.session.user = user;
+            var redir = req.session.destination || '/contests';
+            req.session.destination = null;
+            return res.redirect(redir);
+          }
+
+          // exists user no password
+          else {
+            req.flash('login_error', 'Bad Combo');
+            res.redirect('/login');
+          }
+        });
+
+        return;
       }
 
+      // result is empty or duplicate user error
       req.flash('login_error', 'Bad Combo');
       res.redirect('/login');
     });
@@ -109,6 +127,7 @@ router.post('/login', function (req, res, next) {
 
 router.get('/logout', function(req, res, next) {
   req.session.uid = null;
+  req.session.user = null;
   res.redirect('/');
 });
 

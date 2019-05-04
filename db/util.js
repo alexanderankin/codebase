@@ -1,11 +1,14 @@
-var md5 = require('md5');
+var bcrypt = require('bcryptjs');
 
-require('dotenv').config({
-  path: require('path').join(__dirname, '..', '.env')
-});
-
-function salt(string) {
-  return md5(string + process.env['password_salt']);
+function verify(given, stored, done) {
+  hash(given, function (err, hashed) {
+    if (err) { return done(err); }
+    bcrypt.compare(hashed, stored, done);
+  });
 }
 
-module.exports = { hash: salt };
+function hash(password, done) {
+  bcrypt.hash(password, 12, done);
+}
+
+module.exports = { hash, verify };
